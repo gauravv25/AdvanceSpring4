@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<bean id="server" class="demo.SimpleServer">
+		<!-- <security:intercept-methods> -->
+		<!-- <security:protect access="ROLE_MYADMIN" method="method1" /> -->
+		<!-- <security:protect access="ROLE_MYUSER" method="method2" /> -->
+		<!-- </security:intercept-methods> -->
+	</bean>
+	<bean id="ds"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.hsqldb.jdbcDriver"></property>
+		<property name="url" value="jdbc:hsqldb:hsql://localhost/"></property>
+		<property name="username" value="SA"></property>
+		<property name="password" value=""></property>
+	</bean>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="ds"
+				users-by-username-query="select username, password, 'true' as enabled from users where username=?"
+				authorities-by-username-query="select users.username, roles.rolename from users, roles where users.username=? and roles.username=users.username" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+	<security:global-method-security
+		secured-annotations="enabled">
+	</security:global-method-security>
+</beans>

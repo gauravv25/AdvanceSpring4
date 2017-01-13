@@ -1,0 +1,28 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<bean id="server" class="demo.SimpleServer">
+		<security:intercept-methods>
+			<security:protect access="ROLE_MYADMIN" method="method1" />
+			<security:protect access="ROLE_MYUSER" method="method2" />
+		</security:intercept-methods>
+	</bean>
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="user1" authorities="ROLE_MYADMIN"
+					password="pass1" />
+				<security:user name="user2" authorities="ROLE_MYUSER"
+					password="pass2" />
+				<security:user name="user3" authorities="ROLE_MYADMIN,ROLE_MYUSER"
+					password="pass3" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+</beans>
